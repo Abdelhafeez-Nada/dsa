@@ -1,5 +1,7 @@
 package singleLinkedList;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
 public class LinkedList {
@@ -29,6 +31,19 @@ public class LinkedList {
         }
         tail.setNext(new Node(value));
         tail = tail.getNext();
+    }
+
+    public void insertLast(int... values) {
+        for (int value : values) {
+            // first node
+            if (head == null) {
+                head = new Node(value);
+                tail = head;
+                continue;
+            }
+            tail.setNext(new Node(value));
+            tail = tail.getNext();
+        }
     }
 
     public void insertFirst(int value) {
@@ -68,6 +83,25 @@ public class LinkedList {
         }
         previous.setNext(newNode);
         newNode.setNext(current);
+    }
+
+    public void insertAlternate(LinkedList another) {
+        if (another.getHead() == null)
+            return;
+        Node curr1 = this.getHead();
+        Node curr2 = another.getHead();
+        Node nex1 = curr1;
+        Node nex2 = curr2;
+        while (curr1 != null && curr2 != null) {
+            nex1 = curr1.getNext();
+            nex2 = curr2.getNext();
+            curr1.setNext(curr2);
+            curr2.setNext(nex1);
+            curr1 = nex1;
+            curr2 = nex2;
+        }
+        if (curr1 == null)
+            this.tail = another.getTail();
     }
 
     public void removeFirst() {
@@ -142,6 +176,106 @@ public class LinkedList {
         }
     }
 
+    public void removeDuplicates_enhanced() {
+        Node current = head;
+        Set<Integer> uniques = new HashSet<>();
+        while (current != null) {
+            uniques.add(current.getData());
+        }
+        this.head = null;
+        for (int n : uniques) {
+            if (head == null) {
+                head = new Node(n);
+                this.tail = head;
+                continue;
+            }
+            tail.setNext(new Node(n));
+            tail = tail.getNext();
+        }
+    }
+
+    /*
+     * last = tail;
+     * last = head;
+     * head < last < tail
+     */
+
+    public void removeLastOccurance(int key) {
+        Node current = head;
+        Node last = null;
+        while (current != null) {
+            if (current.getData() == key)
+                last = current;
+            current = current.getNext();
+        }
+        if (last == head) {
+            head = head.getNext();
+            return;
+        }
+        current = head;
+        while (current.getNext() != last)
+            current = current.getNext();
+        if (last == tail) {
+            current.setNext(null);
+            tail = current;
+            return;
+        }
+        current.setNext(last.getNext());
+    }
+
+    public void moveBack(int key) {
+        Node current = head;
+        Node newTail = tail;
+        Node previous = head;
+        while (current != tail) {
+            if (current.getData() == key) {
+                if (current == head) {
+                    newTail = head;
+                    head = head.getNext();
+                    current = head;
+                    previous = head;
+                    tail.setNext(newTail);
+                    newTail.setNext(null);
+                    tail = newTail;
+                    continue;
+                }
+                newTail = current;
+                current = current.getNext();
+                previous.setNext(current);
+                tail.setNext(newTail);
+                newTail.setNext(null);
+                tail = newTail;
+            }
+            previous = current;
+            current = current.getNext();
+        }
+    }
+
+    public void removeDuplicates() {
+        Node current = head;
+        Node temp = null;
+        Node previous = null;
+        while (current != null) {
+            temp = current.getNext();
+            previous = current;
+            while (temp != null) {
+                if (temp.getData() == current.getData()) {
+                    if (temp == tail) {
+                        previous.setNext(null);
+                        tail = previous;
+                        break;
+                    }
+                    previous.setNext(temp.getNext());
+                    temp = previous.getNext();
+                    continue;
+                }
+                previous = temp;
+                temp = temp.getNext();
+            }
+            current = current.getNext();
+        }
+    }
+
     public Node getNth(int n) {
         if (n == 0)
             return head;
@@ -205,6 +339,19 @@ public class LinkedList {
         return -1;
     }
 
+    public int getMax() {
+        Node temp = head.getNext();
+        int max = head.getData();
+
+        return backtrackMax(temp, max);
+    }
+
+    public int backtrackMax(Node temp, int max) {
+        if (temp == null)
+            return max;
+        return backtrackMax(temp.getNext(), Math.max(max, temp.getData()));
+    }
+
     public void swapPairs() throws InterruptedException {
         Node first = head;
         if (first == null || first.getNext() == null)
@@ -219,6 +366,87 @@ public class LinkedList {
                 before.setNext(second);
             before = first;
             first = first.getNext();
+        }
+    }
+
+    public void swapHeadAndTail() throws InterruptedException {
+        if (head == null || head == tail)
+            return;
+        if (head.getNext() == tail) {
+            head.setNext(null);
+            tail.setNext(head);
+        } else {
+            Node afterHead = head.getNext();
+            Node beforeTail = head;
+            while (beforeTail.getNext() != tail)
+                beforeTail = beforeTail.getNext();
+            head.setNext(null);
+            beforeTail.setNext(head);
+            tail.setNext(afterHead);
+        }
+        Node temp = head;
+        head = tail;
+        tail = temp;
+    }
+
+    public void reArrangeOddAndEven_enhanced() {
+
+        Node odd = head;
+        Node evenHead = head.getNext();
+        Node even = evenHead;
+
+        // 1 2 3 4 5
+        while (even != null && even.getNext() != null) {
+            odd.setNext(even.getNext());
+            odd = odd.getNext();
+            if (odd.getNext() == null)
+                break;
+            even.setNext(odd.getNext());
+            even = even.getNext();
+        }
+
+        odd.setNext(evenHead);
+
+        this.tail = even != null ? even : odd;
+        tail.setNext(null);
+
+    }
+
+    public void reArrangeOddAndEven() {
+        if (head == null || head == tail || head.getNext() == tail)
+            return;
+        Node odd = head;
+        Node even;
+
+        LinkedList temp = new LinkedList();
+        while (odd.getNext() != null) {
+            even = odd.getNext();
+            System.out.println("Odd: " + odd.getData() + " Even: " + even.getData());
+            temp.insertLast(even.getData());
+            odd.setNext(even.getNext());
+            if (even == tail) {
+                tail = odd;
+                break;
+            }
+            odd = odd.getNext();
+
+        }
+        this.tail = odd;
+        System.out.println(temp.getHead());
+        System.out.println(this.tail);
+        this.tail.setNext(temp.getHead());
+        this.tail = temp.getTail();
+    }
+
+    public void leftRotate(int k) {
+        Node newHead = null;
+        while (k > 0) {
+            newHead = head.getNext();
+            tail.setNext(head);
+            head.setNext(null);
+            tail = head;
+            head = newHead;
+            k--;
         }
     }
 
