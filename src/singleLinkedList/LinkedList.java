@@ -237,6 +237,30 @@ public class LinkedList {
         current.setNext(last.getNext());
     }
 
+    public void removeNode(Node node) {
+        if (node == this.head) {
+            if (this.head == this.tail) {
+                this.head = null;
+                this.tail = null;
+                return;
+            }
+            head = head.getNext();
+            return;
+        }
+        Node prev = head;
+        Node cur = head.getNext();
+        while (cur != null) {
+            if (cur == node) {
+                prev.setNext(cur.getNext());
+                if (tail == cur)
+                    tail = prev;
+                return;
+            }
+            prev = cur;
+            cur = cur.getNext();
+        }
+    }
+
     public void moveBack(int key) {
         Node current = head;
         Node newTail = tail;
@@ -296,7 +320,7 @@ public class LinkedList {
         Node current = head;
         while (current != null && n >= 0) {
             if (n == 0)
-                return current.getNext();
+                return current;
             current = current.getNext();
             n--;
         }
@@ -565,6 +589,27 @@ public class LinkedList {
         if (next == null)
             return;
         next.setNext(current);
+    }
+
+    public void addHugeNumber_enhanced(LinkedList another) {
+        Node ptr1 = this.getHead();
+        Node ptr2 = another.getHead();
+        int carry = 0;
+        while (ptr1 != null || ptr2 != null || carry != 0) {
+            int val1 = ptr1 == null ? 0 : ptr1.getData();
+            int val2 = ptr2 == null ? 0 : ptr2.getData();
+            int sum = val1 + val2 + carry;
+            carry = sum / 10;
+            if (ptr1 != null) {
+                ptr1.setData(sum % 10);
+                ptr1 = ptr1.getNext();
+            } else {
+                this.tail.setNext(new Node(sum % 10));
+                this.tail = this.tail.getNext();
+            }
+            if (ptr2 != null)
+                ptr2 = ptr2.getNext();
+        }
     }
 
     // number should be reversed in the list 123 >> 3->2->1
