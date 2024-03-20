@@ -4,20 +4,40 @@ public class App {
 
     public static void main(String[] args) throws InterruptedException {
         LinkedList linkedList = new LinkedList();
-        linkedList.insertLast(1);
+        // linkedList.insertFirst(7);
+        // linkedList.insertFirst(8);
+        // linkedList.insertFirst(9);
+        linkedList.insertFirst(5, 6, 9);
         linkedList.print();
         System.out.println("---------------------");
 
         LinkedList linkedList2 = new LinkedList();
-        linkedList2.insertLast(2);
+        // linkedList2.insertFirst(4);
+        // linkedList2.insertFirst(5);
+        // linkedList2.insertFirst(6);
+        // linkedList2.insertFirst(3);
+        linkedList2.insertFirst(9, 8, 7, 5, 4, 6, 7, 8);
+
         linkedList2.print();
         System.out.println("---------------------");
 
-        linkedList.insertAlternate(linkedList2);
-
+        linkedList.addHugeNumber(linkedList2);
         linkedList.print();
-        System.out.println("---------------------");
-        System.out.println(linkedList.getTail());
+
+        // linkedList.insertLast(1);
+        // linkedList.print();
+        // System.out.println("---------------------");
+
+        // LinkedList linkedList2 = new LinkedList();
+        // linkedList2.insertLast(2);
+        // linkedList2.print();
+        // System.out.println("---------------------");
+
+        // linkedList.insertAlternate(linkedList2);
+
+        // linkedList.print();
+        // System.out.println("---------------------");
+        // System.out.println(linkedList.getTail());
 
     }
 

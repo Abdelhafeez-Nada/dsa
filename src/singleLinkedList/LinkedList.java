@@ -58,6 +58,20 @@ public class LinkedList {
         head = node;
     }
 
+    public void insertFirst(int... values) {
+        for (int value : values) {
+            // first node
+            if (head == null) {
+                head = new Node(value);
+                tail = head;
+                continue;
+            }
+            Node node = new Node(value);
+            node.setNext(head);
+            head = node;
+        }
+    }
+
     public void inserSorted(int value) {
         Node newNode = new Node(value);
         Node previous = null;
@@ -551,6 +565,45 @@ public class LinkedList {
         if (next == null)
             return;
         next.setNext(current);
+    }
+
+    // number should be reversed in the list 123 >> 3->2->1
+    public void addHugeNumber(LinkedList another) {
+        if (another.getHead() == null)
+            return;
+        Node ptr1 = this.getHead();
+        Node ptr2 = another.getHead();
+        int carry = 0;
+        while (ptr1 != null && ptr2 != null) {
+            int temp = carry + ptr1.getData() + ptr2.getData();
+            ptr1.setData(temp % 10);
+            carry = temp / 10;
+            ptr1 = ptr1.getNext();
+            ptr2 = ptr2.getNext();
+        }
+        if (ptr1 == null && ptr2 != null) {
+            while (ptr2 != null) {
+                int temp = carry + ptr2.getData();
+                this.tail.setNext(new Node(temp % 10));
+                carry = temp / 10;
+                this.tail = this.tail.getNext();
+                ptr2 = ptr2.getNext();
+            }
+        }
+        if (ptr1 != null && ptr2 == null) {
+            while (ptr1 != null) {
+                int temp = carry + ptr1.getData();
+                ptr1.setData(temp % 10);
+                carry = temp / 10;
+                ptr1 = ptr1.getNext();
+            }
+        }
+        if (ptr1 == null && ptr2 == null) {
+            if (carry > 0) {
+                this.tail.setNext(new Node(carry));
+                this.tail = this.tail.getNext();
+            }
+        }
     }
 
     public boolean equals(LinkedList linkedList) {
