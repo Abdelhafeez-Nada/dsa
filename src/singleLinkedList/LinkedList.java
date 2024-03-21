@@ -238,26 +238,21 @@ public class LinkedList {
     }
 
     public void removeNode(Node node) {
-        if (node == this.head) {
-            if (this.head == this.tail) {
-                this.head = null;
-                this.tail = null;
+        if (node == head) {
+            if (head == tail) {
+                head = tail = null;
                 return;
             }
             head = head.getNext();
             return;
         }
-        Node prev = head;
-        Node cur = head.getNext();
-        while (cur != null) {
-            if (cur == node) {
-                prev.setNext(cur.getNext());
-                if (tail == cur)
-                    tail = prev;
-                return;
-            }
-            prev = cur;
-            cur = cur.getNext();
+        Node current = head;
+        while (current != null && current.getNext() != node)
+            current = current.getNext();
+        if (current != null) {
+            current.setNext(node.getNext());
+            if (node == tail)
+                tail = current;
         }
     }
 
