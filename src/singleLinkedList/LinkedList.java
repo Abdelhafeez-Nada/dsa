@@ -237,25 +237,6 @@ public class LinkedList {
         current.setNext(last.getNext());
     }
 
-    public void removeNode(Node node) {
-        if (node == head) {
-            if (head == tail) {
-                head = tail = null;
-                return;
-            }
-            head = head.getNext();
-            return;
-        }
-        Node current = head;
-        while (current != null && current.getNext() != node)
-            current = current.getNext();
-        if (current != null) {
-            current.setNext(node.getNext());
-            if (node == tail)
-                tail = current;
-        }
-    }
-
     public void moveBack(int key) {
         Node current = head;
         Node newTail = tail;
@@ -306,6 +287,49 @@ public class LinkedList {
                 temp = temp.getNext();
             }
             current = current.getNext();
+        }
+    }
+
+    public void removeAllDublicates() {
+        Node current = head;
+        boolean duplicated;
+        while (current != null) {
+            duplicated = false;
+            Node ptr = current;
+            while (ptr.getNext() != null) {
+                if (ptr.getNext().getData() == current.getData()) {
+                    removeNode(ptr.getNext());
+                    duplicated = true;
+                } else {
+                    ptr = ptr.getNext();
+                }
+            }
+            if (duplicated) {
+                ptr = current.getNext();
+                removeNode(current);
+                current = ptr;
+                continue;
+            }
+            current = current.getNext();
+        }
+    }
+
+    public void removeNode(Node node) {
+        if (node == head) {
+            if (head == tail) {
+                head = tail = null;
+                return;
+            }
+            head = head.getNext();
+            return;
+        }
+        Node current = head;
+        while (current != null && current.getNext() != node)
+            current = current.getNext();
+        if (current != null) {
+            current.setNext(node.getNext());
+            if (node == tail)
+                tail = current;
         }
     }
 
